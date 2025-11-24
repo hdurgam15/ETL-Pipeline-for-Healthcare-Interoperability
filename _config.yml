@@ -1,0 +1,21 @@
+theme: jekyll-theme-cayman
+title: "B581 ETL Project – OpenEMR to Primary Care"
+description: "ETL Pipeline | FHIR | SNOMED | ICD-10 | HL7 v2 | Python"
+
+markdown: kramdown
+
+navigation:
+  - title: Home
+    url: /
+  - title: Introduction
+    url: /introduction
+  - title: About
+    url: /about
+  - title: ETL Pipeline
+    url: /etl_pipeline
+  - title: Insights
+    url: /insights
+  - title: Team
+    url: /team
+  - title: Presentation
+    url: /presentation
