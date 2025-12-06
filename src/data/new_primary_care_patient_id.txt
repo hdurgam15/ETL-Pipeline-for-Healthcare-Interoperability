@@ -1,0 +1,5 @@
+openemr_patient_id="9d0359ac-7573-4d4e-8c47-4c068490ee2a"
+primary_patient_id="324"
+patient_name="Smith, Jack"
+snomed_code="5251000175109"
+snomed_term=""
