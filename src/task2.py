@@ -123,7 +123,6 @@ def create_primary_care_condition(new_patient_id, concept_id, term, preferred_te
     return created
 
 def main():
-    # Load stored Task 1 identifiers
     ids = load_task1_ids()
     stored_openemr_id = ids["openemr_patient_id"]
     stored_primary_id = ids["primary_patient_id"]
