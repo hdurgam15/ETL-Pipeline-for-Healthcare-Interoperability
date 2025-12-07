@@ -547,6 +547,7 @@ We built a complete ETL pipeline that extracts patient data from OpenEMR, transf
 This project taught us how complex healthcare data integration is, but also how standards make it achievable. Proper error handling, validation, and testing are essential for production systems. 
 
 The pipeline provides a solid foundation that the organization can build on. With additional development, it could become the central system for all clinical data exchange across the organization. 
+
 --- 
 
 ## Questions? 
