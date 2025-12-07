@@ -105,7 +105,6 @@ def transform_openemr_patient_to_primary(patient_resource):
             "value": id_obj.get("value", "")
         })
 
-    # NAME
     names = patient_resource.get("name", [])
     cleaned_names = []
     for n in names:
@@ -115,7 +114,6 @@ def transform_openemr_patient_to_primary(patient_resource):
             "given": n.get("given", [])
         })
 
-    # ADDRESS
     addresses = patient_resource.get("address", [])
     cleaned_addresses = []
     for addr in addresses:
@@ -230,7 +228,7 @@ def main():
 
     #Load
     primary_patient_id = create_primary_patient(transformed_patient)
-    primary_condition_id = create_primary_condition(primary_patient_id, parent_id, parent_term, parent_preferredTerm)
+    create_primary_condition(primary_patient_id, parent_id, parent_term, parent_preferredTerm)
 
     #Fetching Patient Name
     patient_name = openemr_patient_resource["name"][0]["text"] if "text" in openemr_patient_resource["name"][0] else \
