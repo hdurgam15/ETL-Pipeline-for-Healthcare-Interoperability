@@ -1,40 +1,79 @@
-# Connect to IU VPN
+# ETL Pipeline for Healthcare Interoperability  
+### FHIR • SNOMED CT • ICD-10 • HL7 v2 • Python
 
-You should connect to IU VPN if trying to access OpenEMR FHIR Server from your home network.
+This project implements a complete ETL (Extract, Transform, Load) pipeline that integrates healthcare data across multiple systems using FHIR APIs, SNOMED CT terminology services, and HL7 v2 message generation.  
+It was developed as part of the B581 Health Info Standards course to demonstrate interoperability workflows across modern and legacy healthcare systems.
 
-[https://servicenow.iu.edu/kb?id=kb_article_view&sysparm_article=KB0023005](https://servicenow.iu.edu/kb?id=kb_article_view&sysparm_article=KB0023005)
+---
 
-# Recreate the project locally
+## Project Overview
 
-FA25_B581_Final_Project_OpenEMR_mahitha_gogu
+The ETL pipeline performs the following:
 
-Recreate the project using the same structure. You should know how to set up a PyCharm project by now.
+- **Extracts** patient demographics, conditions, observations, and procedures from the OpenEMR FHIR server.
+- **Transforms** clinical data using SNOMED CT parent/child concepts and maps SNOMED → ICD-10 using the Hermes Terminology Server.
+- **Loads** transformed patient records, conditions, observations, and procedures into a separate Primary Care FHIR server.
+- **Generates an HL7 v2 ADT message (Task 5)** for legacy system compatibility.
 
-This is a starter project to help get access to the patient data in OpenEMR. You have been added as a collaborator in
-this repo. Do not push any changes to this repo. You can clone or copy the files and recreate the project locally.
+The project includes five individual coding tasks, each representing key components of a healthcare ETL workflow.
 
-Once you know you have access to the OpenEMR FHIR data, your project team must create another repo to collaborate
-for the final submission.
+---
 
-Be careful: for the final project submission, you should not commit or push any sensitive data, such as an access token.
-You will need to add these files to the `.gitignore file` and then collaborate with your teammates on GitHub.
+## How to Run the Project
 
-# Install libraries
+Before running any task, ensure you have:
 
-Run the following command in the terminal (in the project root directory):
-- `pip install -r requirements.txt`
-- OR 
-- `pip install requests`
+1. A valid FHIR access token stored in 
+```
+data/access_token.json
+```
+2. Ensure Python is installed in your machine and install all Python dependencies:
+```
+pip install -r requirements.txt
+```
+3. Running Each Task 
+- Task 1 : Extract, Transform, Load Patient & Parent Condition
+```
+python src/task1.py
+```
+This generates:
+```
+data/new_primary_care_patient_id.txt
+```
 
-# Run code
+- Task 2 : Extract, Transform and Load Child Condition
+```
+python src/task2_child_condition.py
+```
 
-There are only two files that you will need to run to get access to the patient data.
+- Task 3 : Blood Pressure Observation
+```
+python src/task3.py
+```
+- Task 4 – Procedure
+```
+python src/task4.py
+```
+- Task 5 – HL7 ADT Message Creation
+```
+python src/task5.py
+```
 
-First, you will have to run the `refresh_token.py` to generate a new access_token and refresh_token. The access token
-will expire every hour or so. Once it's expired, you will not have access. Therefore, you have to run the
-`refresh_token.py` to get a new access_token.
+## Project Website
 
-Once the new access token has been generated, you can then run the `get_fhir_resource.py` code to check if the access to
-the OpenEMR FHIR server works.
+The full project documentation including pipeline diagrams, insights, team contributions, and presentation slides is available at:
 
-You can ignore all the other files. You need to copy them; however, you do not have to run them.
+https://pages.github.iu.edu/mahigogu/FA25_B581_Final_Project_OpenEMR_mahitha_gogu/
+
+## Requirements and Setup
+Install all Python dependencies using:
+```
+pip install -r requirements.txt
+```
+This installs
+hl7apy
+idna
+requests
+urllib3
+
+And all additional libraries required for Authorization and ETL processing
