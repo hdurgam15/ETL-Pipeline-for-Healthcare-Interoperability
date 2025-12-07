@@ -3,7 +3,7 @@ import requests
 from pathlib import Path
 from src.registration import data_dir
 
-# API URLs
+# URLs
 OPENEMR_BASE_URL = "https://in-info-web20.luddy.indianapolis.iu.edu/apis/default/fhir"
 PRIMARY_CARE_BASE_URL = "http://159.203.105.138:8080/fhir"
 
@@ -130,7 +130,7 @@ def main():
     # Step 1: Check if procedure exists in OpenEMR
     procedure = check_procedure(openemr_patient_id)
 
-    # Step 2: Create procedure on Primary Care EHR
+    # Create procedure on Primary Care EHR
     # Load Task 1 results to get Primary Care patient ID
     results_file = Path(data_dir / "task1_results.json")
 
@@ -163,7 +163,7 @@ def main():
     print(f"New Procedure ID: {new_procedure['id']}")
     print("=" * 60)
 
-    # Save results
+    # results
     results = {
         "patient_id": primary_care_patient_id,
         "procedure_id": new_procedure['id'],

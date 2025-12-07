@@ -43,9 +43,9 @@ Our project demonstrates the movement of patient data from OpenEMR to a Primary 
 ---
 
 ### **Sumant Tiwari**
-- I am from Mumbai, India, and have a bachelor's background in life sciences and technology.  
+- I am from Mumbai, India, and have a bachelor's background in Dental Surgery.  
 - With prior exposure to healthcare systems, I contributed to understanding API flows and terminology mappings.  
-- I assisted in conceptualizing system behavior and refining extraction/transformation logic.
+- I assisted in conceptualizing system behavior and refining extraction/transformation logic along with designing website content.
 
 ---
 
