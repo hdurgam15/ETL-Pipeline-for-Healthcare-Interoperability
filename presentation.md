@@ -230,6 +230,7 @@ icd_display = m.get("mapTargetName", "ICD-10 Term")
 **Missing terms:** Sometimes the preferred term is not available. We use the concept description as a backup. 
 
 **Data inconsistencies:** We added checks to handle patients with incomplete information.
+
 --- 
 
 ## Slide 5: Loading Resources 
