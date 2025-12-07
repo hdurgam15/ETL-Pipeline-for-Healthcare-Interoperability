@@ -226,7 +226,9 @@ icd_display = m.get("mapTargetName", "ICD-10 Term")
 
 ### Challenges We Handled
 **Missing relationships:** Not all concepts have parent or child terms. We check first and use the original concept if no relationship exists. 
+
 **Missing terms:** Sometimes the preferred term is not available. We use the concept description as a backup. 
+
 **Data inconsistencies:** We added checks to handle patients with incomplete information.
 --- 
 
