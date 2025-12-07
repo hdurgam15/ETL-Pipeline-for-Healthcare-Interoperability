@@ -26,29 +26,46 @@
 
 --- 
 
- 
-
-## Slide 1: Title and Team Introduction 
-
- 
-
+## Slide 1: Title and Team Introduction
 # Healthcare Data Integration Using FHIR ETL Pipeline 
 
- 
+## About Our Team
+We are a collaborative four-member team working together to design and implement a complete ETL pipeline for healthcare interoperability.  
+Our project demonstrates the movement of patient data from OpenEMR to a Primary Care EHR system while maintaining accuracy, structure, and clinical meaning.
 
-### Team Members 
-
-- Mahitha Gogu 
-
-- Haritha Durgam
-
-- Sumant Tiwari
-
-- Monisha Shaik 
-
-**Course:** B581 - Health Info Standards
+### Team Members & Backgrounds
 
 ---
+### **Mahitha Gogu**
+- I am from Hyderabad, India, and I hold a Bachelor's degree in Dental Surgery.  
+- I worked as a junior doctor for almost a year before pursuing my graduate studies.  
+- I contributed to Website, ETL pipeline for first two tasks, and validating transformed healthcare records.
+
+---
+
+### **Haritha Durgam**
+- I am from Hyderabad, India, with a strong academic foundation in health and data sciences.  
+- My experience includes clinical data handling and analytical workflows.  
+- I supported analysis, verification of transformed FHIR resources, and end-to-end ETL validation.
+
+---
+
+### **Sumant Tiwari**
+- I am from Mumbai, India, and have a bachelor's background in life sciences and technology.  
+- With prior exposure to healthcare systems, I contributed to understanding API flows and terminology mappings.  
+- I assisted in conceptualizing system behavior and refining extraction/transformation logic.
+
+---
+
+### **Monisha Shaik**
+- I am from Hyderabad, India, and I have a Bachelor's degree in Dental Surgery.  
+- I previously worked as a junior doctor for nearly a year, giving me hands-on clinical exposure.  
+- I contributed to presentation design, terminology integration, and review of ETL and HL7 messaging workflows.
+
+---
+
+Together, our diverse clinical and technical backgrounds helped us collaborate effectively across extraction, transformation, loading, terminology mapping, and interoperability visualization.
+
 ## Slide 2: Introduction to FHIR and ETL
 ### What is FHIR?
 FHIR stands for Fast Healthcare Interoperability Resources. It is a modern standard that helps different healthcare systems exchange patient information. FHIR uses familiar web technologies like REST APIs and JSON format, which makes it easier for developers to work with healthcare data. 
