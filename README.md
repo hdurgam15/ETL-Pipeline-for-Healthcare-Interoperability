@@ -71,9 +71,9 @@ Install all Python dependencies using:
 pip install -r requirements.txt
 ```
 This installs
-hl7apy
-idna
-requests
-urllib3
+- hl7apy
+- idna
+- requests
+- urllib3
 
 And all additional libraries required for Authorization and ETL processing
