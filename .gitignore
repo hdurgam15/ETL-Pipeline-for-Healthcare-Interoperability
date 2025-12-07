@@ -125,3 +125,8 @@ cython_debug/
 
 # PyCharm
 .idea/
+
+# Sensitive Files
+src/data/client_id.txt
+src/data/client_secret.txt
+src/data/access_token.json
