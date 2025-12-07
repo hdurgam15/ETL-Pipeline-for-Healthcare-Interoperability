@@ -1,0 +1,45 @@
+{
+  "resourceType": "Procedure",
+  "meta": {
+    "profile": [
+      "https://dentalinformatics.online/B581/StructureDefinition/procedure-profile"
+    ]
+  },
+  "text": {
+    "status": "generated"
+  },
+  "status": "completed",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "80146002",
+        "display": "Appendectomy (Procedure)"
+      }
+    ],
+    "text": "Appendectomy"
+  },
+  "performedDateTime": "2024-12-07T12:00:00Z",
+  "recorder": {
+    "reference": "Practitioner/8",
+    "display": "Dr Adam Careful"
+  },
+  "performer": [
+    {
+      "actor": {
+        "reference": "Practitioner/8",
+        "display": "Dr Adam Careful"
+      }
+    }
+  ],
+  "followUp": [
+    {
+      "text": "ROS 5 days - 2024-12-12"
+    }
+  ],
+  "note": [
+    {
+      "text": "Routine Appendectomy. Appendix was inflamed and in retro-caecal position."
+    }
+  ]
+}
