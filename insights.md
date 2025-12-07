@@ -11,19 +11,6 @@ title: Insights
 
 ---
 
----
-layout: default
-title: Insights
---- 
-
-# ETL Project
-
----
-
-[Home](index.md) | [Team Contributions](team_contributions.md) | [ETL Pipeline](etl_pipeline.md) | [Insights](insights.md)| [Presentation](presentation.md) | [Github Project Repo](https://github.iu.edu/mahigogu/FA25_B581_Final_Project_OpenEMR_mahitha_gogu)
-
----
-
 # Project Insights and Reflections 
 
 This page shows what we learned from building our ETL pipeline using OpenEMR, Hermes SNOMED server, and Primary Care FHIR server.
