@@ -11,7 +11,7 @@ A detailed walkthrough of all five ETL tasks completed in this project.
 
 ---
 
-# 1. Overview of the ETL Pipeline
+## 1. Overview of the ETL Pipeline
 
 This project implements a complete **Extract → Transform → Load** workflow for integrating healthcare data from **OpenEMR** into a **Primary Care FHIR Server**, followed by generating **HL7 v2 ADT messages** for legacy interoperability.
 
@@ -24,9 +24,9 @@ The ETL pipeline uses:
 
 ---
 
-# 2. Extraction
+## 2. Extraction
 
-## 2.1 API Endpoints Used
+### 2.1 API Endpoints Used
 
 | System | Endpoint Base URL |
 |--------|-------------------|
@@ -36,7 +36,7 @@ The ETL pipeline uses:
 
 ---
 
-## 2.2 Authentication & Authorization
+### 2.2 Authentication & Authorization
 
 All extraction calls to OpenEMR use a Bearer token for Authorization stored in:
 ```
@@ -59,7 +59,7 @@ headers = {
 }
 ```
 
-## 2.3 Extracting Patient Data with FHIR Search Parameters
+### 2.3 Extracting Patient Data with FHIR Search Parameters
 
 Example search calls used in our project:
 
@@ -86,7 +86,7 @@ response = requests.get(url, headers=get_headers_openemr())
 conditions = [entry["resource"] for entry in response.json().get("entry", [])]
 ```
 
-2.4 Error Handling in Extraction
+### 2.4 Error Handling in Extraction
 
 ```
 try:
@@ -106,14 +106,16 @@ We validate:
 
 Transformation includes:
 
-- SNOMED CT parent concept lookup (Task 1)
-- SNOMED CT child concept lookup (Task 2)
+- SNOMED CT parent concept lookup and transform primary care EMR request body (Task 1)
+- SNOMED CT child concept lookup and transform primary care EMR request body(Task 2)
+- Populating Blood Pressure Observations (Task 3)  
+- Populating Procedure resources (Task 4)  
 - SNOMED → ICD-10 mapping (Task 5)
 
 Cleaning and formatting of FHIR resources
 Constructing valid FHIR Patient, Condition, Observation, Procedure JSON
 
-## 3.1 SNOMED Parent Lookup (Task 1)
+### 3.1 SNOMED Parent Lookup (Task 1)
 
 We use ECL constraint syntax:```>! <snomed_code>```
 
@@ -128,7 +130,7 @@ parent_term = parent["term"]
 parent_preferredTerm = parent["preferredTerm"]
 ```
 
-## 3.2 SNOMED Child Lookup (Task 2)
+### 3.2 SNOMED Child Lookup (Task 2)
 
 We use:
 ```<! <snomed_code>```
@@ -141,8 +143,87 @@ child_id = child["conceptId"]
 child_term = child["term"]
 child_preferredTerm = child["preferredTerm"]
 ```
+### 3.3 BP Observation Handling (Task 3)
 
-## 3.3 SNOMED → ICD-10 Mapping (Task 5)
+Task 3 required a conditional transformation:
+
+Case 1 : BP Observation exists in OpenEMR
+
+We extract the existing values and map them to our BP template.
+```
+component = resource["component"]
+sys_value = component[0]["valueQuantity"]["value"]
+dia_value = component[1]["valueQuantity"]["value"]
+```
+
+We then merge these values into the template JSON:
+```
+bp_template["component"][0]["valueQuantity"]["value"] = sys_value
+bp_template["component"][1]["valueQuantity"]["value"] = dia_value
+bp_template["subject"] = {"reference": f"Patient/{primary_id}"}
+```
+
+We also generate clinical interpretations:
+```python
+def interpret_bp(sys, dia):
+    if sys < 90 or dia < 60:
+        return "L", "Low"
+    if sys > 140 or dia > 90:
+        return "H", "High"
+    return "N", "Normal"
+```
+
+Interpretation fields are inserted before loading.
+
+Case 2 : BP Observation does NOT exist in OpenEMR
+
+We load a JSON template:
+```
+data/blood_pressure_observation.json
+```
+This template includes systolic/diastolic codes, category, status, etc.
+We then append:
+- subject reference
+- default interpretation fields
+- effective datetime
+
+```python
+bp_template = load_bp_template(primary_id)
+bp_template["subject"] = {"reference": f"Patient/{primary_id}"}
+```
+### 3.4 Procedure Handling (Task 4)
+
+Task 4 is similar to that of Task 3
+
+Case 1 : Procedure exists in OpenEMR
+
+We extract fields such as:
+```python
+procedure_code = proc["code"]["coding"][0]["code"]
+performed_date = proc.get("performedDateTime", "2024-01-01")
+notes = proc.get("note", [])
+````
+
+We build the transformed JSON:
+```
+proc_json = load_procedure_template(primary_id)
+proc_json["code"]["coding"][0]["code"] = procedure_code
+proc_json["performedDateTime"] = performed_date
+proc_json["note"] = notes
+proc_json["subject"] = {"reference": f"Patient/{primary_id}"}
+```
+
+This ensures the Primary Care system receives a procedurally identical representation.
+
+Case 2 : Procedure does NOT exist in OpenEMR
+
+We load the fallback template:
+
+```
+data/add_procedure.json
+```
+
+### 3.5 SNOMED → ICD-10 Mapping (Task 5)
 
 We pull ICD-10 mapping from a SNOMED refset:
 
@@ -157,7 +238,7 @@ icd_code = mapping["mapTarget"]
 icd_display = mapping.get("mapTargetName", "ICD-10 Term")
 ```
 
-## 3.4 Patient Resource Transformation
+### 3.6 Patient Resource Transformation
 
 We transform the OpenEMR patient resource to match the Primary Care Patient profile.
 ```python
