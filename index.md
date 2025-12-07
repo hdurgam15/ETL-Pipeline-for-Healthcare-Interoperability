@@ -1,10 +1,13 @@
+---
+title: "Home"
+layout: default
+---
 # ETL Project
 
 ---
 
 ## Navigation
 - [Home](index.md)
-- [About](about.md)
 - [Team Contributions](team_contributions.md)
 - [ETL Pipeline](etl_pipeline.md)  
 - [Insights](insights.md)
