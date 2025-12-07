@@ -451,16 +451,6 @@ Different systems use different date formats. We created a function that convert
 
 Working on the same code at the same time caused merge conflicts in Git. We solved this by using separate branches for each feature and doing code reviews before merging. 
 
-### Resources Processed
-Our pipeline successfully processed:
-- 5 patients
-- 12 medical conditions
-- 5 blood pressure observations
-- 5 medical procedures
-- 5 HL7 v2 messages
-
-About 70% of the records we worked with had complete data. Another 25% had partial data that we could still process. Only 5% had to be skipped due to missing critical information. 
-
 ### Lessons We Learned 
 
 **Test each component separately** 
