@@ -19,8 +19,7 @@ This page shows what we learned from building our ETL pipeline using OpenEMR, He
 
 ## Our Visualizations
 
-![ETL Insights Dashboard](assets/etl_insights_visualization.png)
-Figure 1: Comprehensive ETL Pipeline Insights Dashboard
+
 
 ![SNOMED Mapping Details](assets/etl_project_insights.png)
 Figure 2: Detailed SNOMED CT Mapping and Workflow Analysis
