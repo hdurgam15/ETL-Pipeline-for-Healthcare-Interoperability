@@ -19,7 +19,7 @@ layout: default
 
 # Introduction
 
-Modern healthcare organizations manage vast amounts of clinical information—ranging from patient demographics to medical conditions, diagnostic results, and treatment procedures. These data often originate from different systems and formats, creating challenges for interoperability and clinical decision support.
+Modern healthcare organizations manage vast amounts of clinical information ranging from patient demographics to medical conditions, diagnostic results, and treatment procedures. These data often originate from different systems and formats, creating challenges for interoperability and clinical decision support.
 
 This project addresses these challenges by developing a streamlined ETL (Extract, Transform, Load) pipeline specifically tailored for healthcare data. The goal is to reliably collect information from the OpenEMR FHIR server, standardize it using medical terminology systems, and load enriched records into a Primary Care EHR. By ensuring that critical patient information is consistent and readily accessible, the pipeline enhances clinical workflows, supports evidence-based decision-making, and ultimately contributes to improved patient care.
 
@@ -53,12 +53,12 @@ Used to implement the full ETL workflow, including API calls, Extracting, Loadin
 Provides a standardized, interoperable format for healthcare data exchange. The pipeline interacts with multiple FHIR resources such as Patient, Condition, Procedure, and Observation.
 
 ### Hermes Terminology Server (SNOMED CT)  
-Enables terminology lookups—including parent and child concept retrieval and ICD-10 mapping—ensuring clinically meaningful data transformation.
+Enables terminology lookups including parent and child concept retrieval and ICD-10 mapping ensuring clinically meaningful data transformation.
 
 ### Primary Care EHR FHIR Server  
 Serves as the destination system where transformed and enriched clinical records are loaded.
 
-### HL7 v2 (for Task 5)  
+### HL7 v2
 Used to demonstrate legacy interoperability by translating FHIR resources into an ADT-A01 HL7 message.
 
 ---
