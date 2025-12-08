@@ -1,181 +1,137 @@
 import json
 import requests
-from pathlib import Path
-from src.registration import data_dir
-
-# URLs
-OPENEMR_BASE_URL = "https://in-info-web20.luddy.indianapolis.iu.edu/apis/default/fhir"
-PRIMARY_CARE_BASE_URL = "http://159.203.105.138:8080/fhir"
 
 
-def get_access_token():
-    """Load access token from file"""
-    file_path = Path(data_dir / "access_token.json")
-    with open(file_path, 'r') as f:
-        data = json.load(f)
-        return data.get("access_token")
+OPENEMR_BASE = "https://in-info-web20.luddy.indianapolis.iu.edu/apis/default/fhir"
+PRIMARY_CARE_BASE = "http://159.203.105.138:8080/fhir"
 
+def load_access_token():
+    with open("data/access_token.json") as f:
+        return json.load(f)["access_token"]
 
-def get_openemr_headers():
-    """Create headers with access token for OpenEMR"""
-    token = get_access_token()
+ACCESS_TOKEN = load_access_token()
+
+def load_task1_ids():
+    data = {}
+    with open("data/new_primary_care_patient_id.txt") as f:
+        for line in f:
+            if "=" in line:
+                k, v = line.strip().split("=")
+                data[k] = v.strip('"')
+    return data
+
+# Extract procedure details from OpenEMR if one exists
+def extract_procedure_from_openemr(openemr_patient_id):
+    url = f"{OPENEMR_BASE}/Procedure?subject=Patient/{openemr_patient_id}"
+    headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
+
+    resp = requests.get(url, headers=headers)
+    resp.raise_for_status()
+
+    bundle = resp.json()
+    entries = bundle.get("entry", [])
+
+    if not entries:
+        return None
+
+    proc = entries[0]["resource"]
+
+    coding = proc.get("code", {}).get("coding", [{}])[0]
+    snomed_code = coding.get("code", "")
+    snomed_display = coding.get("display", "")
+
+    performed = proc.get("performedDateTime", "2024-12-07T12:00:00Z")
+
+    performer = None
+    recorder = None
+    note_text = None
+
+    perf_list = proc.get("performer", [])
+    if perf_list:
+        performer = perf_list[0].get("actor", {})
+
+    recorder = proc.get("recorder", {})
+
+    notes = proc.get("note", "")
+    if notes:
+        note_text = notes[0].get("text", "")
+
     return {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/fhir+json"
+        "snomed_code": snomed_code,
+        "snomed_display": snomed_display,
+        "performed": performed,
+        "performer": performer,
+        "recorder": recorder,
+        "note": note_text
     }
 
+def load_procedure_template(primary_care_patient_id, extracted_proc=None):
+    path = "data/add_procedure.json"
 
-def check_procedure(patient_id):
-    """
-    Step 1: Check if Procedure exists in OpenEMR
-    """
-    print("\n=== STEP 1: CHECK FOR PROCEDURE ===")
+    with open(path) as f:
+        proc = json.load(f)
 
-    url = f"{OPENEMR_BASE_URL}/Procedure?patient={patient_id}"
-    print(f"URL: {url}")
-    print(f"Searching for Procedures...")
+    proc["subject"] = {"reference": f"Patient/{primary_care_patient_id}"}
 
-    try:
-        response = requests.get(url, headers=get_openemr_headers(), timeout=10)
-        data = response.json()
+    if extracted_proc:
 
-        total = data.get('total', 0)
-        print(f"Found {total} Procedures")
+        proc["code"]["coding"][0]["code"] = extracted_proc["snomed_code"]
+        proc["code"]["coding"][0]["display"] = extracted_proc["snomed_display"]
+        proc["code"]["text"] = extracted_proc["snomed_display"]
 
-        if 'entry' in data and len(data['entry']) > 0:
-            procedure = data['entry'][0]['resource']
-            print(f"✓ Procedure exists")
-            print(f"Procedure ID: {procedure['id']}")
-            return procedure
-        else:
-            print("✗ No Procedure found in OpenEMR")
-            return None
+        proc["performedDateTime"] = extracted_proc["performed"]
 
-    except requests.exceptions.JSONDecodeError:
-        print("✗ Invalid response from OpenEMR (empty or non-JSON)")
-        return None
-    except requests.exceptions.Timeout:
-        print("✗ Request timeout")
-        return None
-    except Exception as e:
-        print(f"✗ Error checking procedure: {e}")
-        return None
+        if extracted_proc["recorder"]:
+            proc["recorder"] = extracted_proc["recorder"]
 
+        if extracted_proc["performer"]:
+            proc["performer"] = [
+                {"actor": extracted_proc["performer"]}
+            ]
 
-def create_procedure(patient_id):
-    """
-    Step 2: Create Procedure on Primary Care EHR
-    """
-    print("\n=== STEP 2: CREATE PROCEDURE ===")
+        if extracted_proc["note"]:
+            proc["note"] = [{"text": extracted_proc["note"]}]
 
-    procedure = {
-        "resourceType": "Procedure",
-        "text": {
-            "status": "generated",
-            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Appendectomy procedure</p></div>"
-        },
-        "meta": {
-            "profile": ["http://hl7.org/fhir/us/core/StructureDefinition/us-core-procedure"]
-        },
-        "status": "completed",
-        "code": {
-            "coding": [{
-                "system": "http://snomed.info/sct",
-                "code": "80146002",
-                "display": "Appendectomy"
-            }],
-            "text": "Appendectomy"
-        },
-        "subject": {
-            "reference": f"Patient/{patient_id}"
-        },
-        "performedDateTime": "2024-11-20T14:00:00Z"
-    }
+    return proc
 
-    url = f"{PRIMARY_CARE_BASE_URL}/Procedure"
-    headers = {"Content-Type": "application/fhir+json"}
+# POST procedure to Primary Care Server
+def post_procedure(proc_json):
+    url = f"{PRIMARY_CARE_BASE}/Procedure"
+    response = requests.post(url, json=proc_json)
 
-    print(f"Creating Procedure...")
-    print(f"Procedure: Appendectomy (SNOMED: 80146002)")
-    print(f"Status: completed")
-    print(f"Date: 2024-11-20")
-
-    try:
-        response = requests.post(url, headers=headers, json=procedure, timeout=10)
-        response.raise_for_status()
-
-        created_procedure = response.json()
-        procedure_id = created_procedure['id']
-        print(f"✓ Procedure created with ID: {procedure_id}")
-
-        return created_procedure
-
-    except requests.exceptions.Timeout:
-        print("✗ Request timeout")
-        return None
-    except Exception as e:
-        print(f"✗ Error creating procedure: {e}")
+    if response.status_code not in (200, 201):
+        print("Failed to post Procedure")
+        print("Status:", response.status_code)
+        print(response.text)
         return None
 
+    return response.json()
 
-def main():
-    """Main execution for Task 4"""
-    print("\n" + "=" * 60)
-    print("CODING TASK 4: PROCEDURE")
-    print("=" * 60)
+def run_task_4():
+    ids = load_task1_ids()
 
-    # Get patient from Task 1
-    openemr_patient_id = "9d035909-a26e-4271-ab8f-e57ca59d2286"
+    openemr_patient_id = ids["openemr_patient_id"]
+    primary_care_patient_id = ids["primary_patient_id"]
 
-    # Step 1: Check if procedure exists in OpenEMR
-    procedure = check_procedure(openemr_patient_id)
+    print("OpenEMR Patient ID:", openemr_patient_id)
+    print("Primary Care Patient ID:", primary_care_patient_id)
 
-    # Create procedure on Primary Care EHR
-    # Load Task 1 results to get Primary Care patient ID
-    results_file = Path(data_dir / "task1_results.json")
+    extracted_proc = extract_procedure_from_openemr(openemr_patient_id)
 
-    try:
-        with open(results_file, 'r') as f:
-            task1_results = json.load(f)
+    if extracted_proc:
+        print("Procedure exists in OpenEMR — importing details.")
+        proc_resource = load_procedure_template(primary_care_patient_id, extracted_proc)
+    else:
+        print("No Procedure exists in OpenEMR — using template.")
+        proc_resource = load_procedure_template(primary_care_patient_id)
 
-        primary_care_patient_id = task1_results['patient_id']
+    created = post_procedure(proc_resource)
 
-    except FileNotFoundError:
-        print("✗ Task 1 results file not found. Please run Task 1 first.")
-        return
-    except Exception as e:
-        print(f"✗ Error reading Task 1 results: {e}")
-        return
+    if created:
+        print("Procedure successfully created on Primary Care Server.")
+        print("Procedure ID:", created.get("id"))
+    else:
+        print("Error creating procedure.")
 
-    new_procedure = create_procedure(primary_care_patient_id)
-
-    if not new_procedure:
-        print("\n✗ Failed to create procedure")
-        return
-
-    # Summary
-    print("\n" + "=" * 60)
-    print("✓ TASK 4 COMPLETED")
-    print("=" * 60)
-    print(f"OpenEMR Patient ID: {openemr_patient_id}")
-    print(f"Primary Care Patient ID: {primary_care_patient_id}")
-    print(f"Procedure: Appendectomy")
-    print(f"New Procedure ID: {new_procedure['id']}")
-    print("=" * 60)
-
-    # results
-    results = {
-        "patient_id": primary_care_patient_id,
-        "procedure_id": new_procedure['id'],
-        "procedure_code": "80146002",
-        "procedure_name": "Appendectomy"
-    }
-
-    results_file = Path(data_dir / "task4_results.json")
-    with open(results_file, 'w') as f:
-        json.dump(results, f, indent=2)
-    print(f"\n✓ Results saved to: {results_file}")
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    run_task_4()
