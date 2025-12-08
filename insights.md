@@ -22,7 +22,7 @@ This page shows what we learned from building our ETL pipeline using OpenEMR, He
 
 
 ![SNOMED Mapping Details](assets/etl_project_insights.png)
-Figure 2: Detailed SNOMED CT Mapping and Workflow Analysis
+Figure 1: Detailed SNOMED CT Mapping and Workflow Analysis
 
 ---
 
