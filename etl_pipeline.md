@@ -464,6 +464,3 @@ This ETL pipeline demonstrates:
 - Robust extraction, transformation, and loading workflow 
 - The pipeline forms a reusable foundation for real healthcare system integration.
 
-
-
-8u
