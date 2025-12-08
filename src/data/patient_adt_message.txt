@@ -1,4 +1,1 @@
-MSH|^~\&|OpenEMR|OpenEMR_FHIR|PrimaryCareEHR|HL7_Module|20251124000256||ADT^A01|MSG00001|P|2.5
-PID|1||9d0359ac-7573-4d4e-8c47-4c068490ee2a||Smith^Jack||19200227|M|||540 Baumbach Station Unit 63^Brockton^Massachusetts^02351^^H
-PV1|1|I
-DG1|1||^ICD-10 Term^I10|
+MSH|^~\&|OpenEMR|OpenEMR_FHIR|PrimaryCareEHR|HL7_Module|20251208014235||ADT^A01|MSG00001|P|2.5PID|1||9d035a4b-916f-4ea4-b0e7-f81597dd0724||Bashirian^Brian||19820930|M|||912 Ruecker Camp^Fitchburg^Massachusetts^01420^^HPV1|1|IDG1|1||R56.8^ICD-10 Term^I10|
