@@ -201,7 +201,7 @@ def create_primary_condition(new_patient_id, parent_id, parent_term, parent_pref
 def main():
 
     # Extraction
-    patients_data = get_patients(name="Smith", gender="male")
+    patients_data = get_patients(name="Bashirian", gender="male")
     openemr_patient_id = get_patient_id(patients_data)
     print("OpenEMR Patient ID:", openemr_patient_id)
 
