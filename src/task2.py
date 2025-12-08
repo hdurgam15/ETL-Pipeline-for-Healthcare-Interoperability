@@ -138,7 +138,7 @@ def main():
         snomed = get_snomed_concept_id(cond)
         child_concept_id, child_term, child_preferredTerm = get_child_concept(snomed)
         if child_concept_id:
-            print(f"Using SNOMED {snomed} and its Child {child_concept_id}")
+            print(f"Using SNOMED {snomed} and its Child {child_concept_id} and its child term {child_term}")
             break
 
     if child_concept_id is None:
