@@ -93,10 +93,10 @@ The SNOMED lookup is our bottleneck because it makes API calls to Hermes server.
 
 Here's how we transform a SNOMED code:
 
-- **Start:** 38341003 (Hypertension)
-- **Parent:** 64572001 (Hypertensive disorder)
-- **Child:** 443593001 (Hypertension stage 2)
-- **ICD-10:** I10 (Essential Hypertension)
+- **Start:** 128613002 (Seizure disorder)
+- **Parent:** 91175000 (Seizure)
+- **Child:** 84757009 (Epilepsy)
+- **ICD-10:** R56.8
 
 The Hermes server helps us navigate these relationships.
 
