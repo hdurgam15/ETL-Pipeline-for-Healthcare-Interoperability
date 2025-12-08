@@ -68,7 +68,7 @@ Example search calls used in our project:
 
 Search for patient by name and gender:
 ```
-GET /Patient?name=Smith&gender=male
+GET /Patient?name=Bashirian&gender=male
 ```
 
 Extract the patient ID:
@@ -168,12 +168,22 @@ bp_template["subject"] = {"reference": f"Patient/{primary_id}"}
 
 We also generate clinical interpretations:
 ```python
-def interpret_bp(sys, dia):
-    if sys < 90 or dia < 60:
-        return "L", "Low"
-    if sys > 140 or dia > 90:
-        return "H", "High"
-    return "N", "Normal"
+def interpret_bp(bp_type, value):
+    if bp_type == "sys":
+        if value < 90:
+            return "L", "Low"
+        elif value <= 120:
+            return "N", "Normal"
+        else:
+            return "H", "High"
+
+    if bp_type == "dia":
+        if value < 65:
+            return "L", "Low"
+        elif value <= 80:
+            return "N", "Normal"
+        else:
+            return "H", "High"
 ```
 
 Interpretation fields are inserted before loading.
@@ -446,12 +456,12 @@ data/patient_adt_message.txt
 
 ## 6. Challenges & Resolutions
 
-| Team Member                       | Role                                                                  |
-|-----------------------------------|-----------------------------------------------------------------------|
-| Missing SNOMED parent/child terms | Iterated conditions until valid relationship found                    |
+| Challenge                         | Resolution                                                             |
+|-----------------------------------|------------------------------------------------------------------------|
+| Missing SNOMED parent/child terms | Iterated conditions until valid relationship found                     |
 | Incomplete FHIR fields            | Added default values such as Not Available, undefined in the structure |
-| API timeouts / errors | Added raise_for_status() and exception handling |            |
-| HL7 formatting complexities | Used hl7apy for segment validation |
+| API timeouts / errors             | Added raise_for_status() and exception handling                        |            |
+| HL7 formatting complexities       | Used hl7apy for segment validation                                     |
 
 ## 7.Summary
 

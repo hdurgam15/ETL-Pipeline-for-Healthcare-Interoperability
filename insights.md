@@ -87,8 +87,6 @@ The SNOMED lookup is our bottleneck because it makes API calls to Hermes server.
 - Female: 35%
 - Other/Unknown: 3%
 
-We tested with 100 patients from OpenEMR.
-
 ---
 
 ## Mapping Example
@@ -141,18 +139,6 @@ FHIR is modern but HL7 v2 is still widely used in hospitals. Our pipeline suppor
 
 **4. Save IDs for later tasks**  
 We stored patient IDs and SNOMED codes in a text file so Tasks 2-5 could use data from Task 1.
-
----
-
-## Task Completion
-
- Task 1: Parent term - Done  
- Task 2: Child term - Done  
- Task 3: Blood pressure observation - Done  
- Task 4: Procedure - Done  
- Task 5: HL7 message - Done  
-
-**All 5 tasks completed successfully!**
 
 ---
 

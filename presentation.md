@@ -36,7 +36,7 @@ Our project demonstrates the movement of patient data from OpenEMR to a Primary 
 ---
 
 ### **Haritha Durgam**
-- I am from Hyderabad, India, with a strong academic foundation in health and data sciences.  
+- I am from Hyderabad, India, with a Bachelor's degree in Dental Surgery.  
 - My experience includes clinical data handling and analytical workflows.  
 - I supported analysis, verification of transformed FHIR resources, and end-to-end ETL validation.
 
@@ -114,7 +114,7 @@ FHIR allows us to search for specific patients using different criteria. Here ar
 
 **Search by patient name:**
 ``` 
-GET /Patient?name=Smith 
+GET /Patient?name=Bashirian 
 ```
 **Search by gender:**
 ``` 
@@ -123,7 +123,7 @@ GET /Patient?gender=male
 
 **Get all conditions for a specific patient:**
 ``` 
-GET /Condition?patient=12345 
+GET /Condition?patient=9d0359ac-7573-4d4e-8c47-4c068490ee2a
 ``` 
 
 ### Error Handling
@@ -149,23 +149,22 @@ We run our Python script from the command line. The script connects to OpenEMR, 
 SNOMED CT is a comprehensive medical terminology system. It organizes medical concepts in hierarchies where terms can have parent terms that are more general and child terms that are more specific. 
 
 For example:
-- Child term: "Bacterial pneumonia"
-- Parent term: "Pneumonia"
-- Broader parent: "Lung disease" 
+- Child term: "Epilepsy"
+- Parent term: "Seizure"
 
 ### Finding a Parent Term 
 We start with a specific diagnosis and find a more general parent term. Here is the process: 
 
 **Original concept from OpenEMR:**
 ``` 
-SNOMED Code: 233604007 
-Term: "Bacterial pneumonia" 
+SNOMED Code: 128613002 
+Term: "Seizure disorder" 
 ```
 
 **Using Hermes to find the parent:** 
 
 ```python 
-concept_id = "233604007" 
+concept_id = "128613002" 
 hermes_url = "http://159.203.121.13:8080/v1/snomed" 
 response = requests.get(f"{hermes_url}/search?constraint=>! {snomed_code}") 
 data = response.json() 
@@ -178,8 +177,9 @@ parent_term = parent["term"]
 
 **Parent concept we found:**
 ``` 
-SNOMED Code: 233607007 
-Term: "Pneumonia" 
+SNOMED Code: 91175000 
+Term: "Fit" 
+Preferred Term: "Seizure"
 ```
 We use the parent term because it is more general and works better for data exchange between different systems. 
 
@@ -189,8 +189,8 @@ Sometimes we need a more specific diagnosis. Here is how we find child terms:
 **Original concept:** 
 
 ``` 
-SNOMED Code: 73211009 
-Term: "Diabetes mellitus" 
+SNOMED Code: 128613002 
+Term: "Seizure disorder" 
 ```
 
 **Using Hermes to find children:**
@@ -202,8 +202,8 @@ children = response.json()
 
 **Child concept we found:**
 ``` 
-SNOMED Code: 44054006 
-Term: "Type 2 diabetes mellitus" 
+SNOMED Code: 84757009 
+Term: "Epilepsy" 
 ```
 The child term gives us a more specific diagnosis which is useful for detailed clinical records. 
 
@@ -221,8 +221,8 @@ icd_display = m.get("mapTargetName", "ICD-10 Term")
 ```
 
 **Example mapping:**
-- SNOMED CT: 38341003 (Hypertension)
-- ICD-10: I10 (Essential hypertension) 
+- SNOMED CT: 128613002 (Seizure Disorder)
+- ICD-10: R56.8
 
 ### Challenges We Handled
 **Missing relationships:** Not all concepts have parent or child terms. We check first and use the original concept if no relationship exists. 
@@ -241,9 +241,9 @@ First, we create the patient resource in the Primary Care system:
 primary_care_url = "http://159.203.105.138:8080/fhir" 
 new_patient = { 
     "resourceType": "Patient", 
-    "name": [{"family": "Smith", "given": ["John"]}], 
+    "name": [{"family": "Bashirian", "given": ["Brian"]}], 
     "gender": "male", 
-    "birthDate": "1990-05-15" 
+    "birthDate": "1982-09-30" 
 }
 # Send the patient data to Primary Care server 
 response = requests.post( 
@@ -261,8 +261,8 @@ condition_parent = {
     "code": { 
         "coding": [{ 
             "system": "http://snomed.info/sct", 
-            "code": "233607007",
-            "display": "Pneumonia" 
+            "code": "128613002",
+            "display": "Seizure Disorder" 
         }] 
     }, 
     "subject": {"reference": f"Patient/{patient_id}"} 
@@ -279,8 +279,8 @@ condition_child = {
     "code": { 
         "coding": [{ 
             "system": "http://snomed.info/sct", 
-            "code": "44054006",  # Child term code 
-            "display": "Type 2 diabetes mellitus"  # Child term 
+            "code": "84757009",  # Child term code 
+            "display": "Epilepsy"  # Child term 
         }] 
     }, 
     
@@ -355,9 +355,9 @@ We transform FHIR JSON data into HL7 v2 text format. Here is what it looks like:
 {
   "resourceType": "Patient",
   "id": "12345",
-  "name": [{"family": "Smith", "given": ["John"]}],
+  "name": [{"family": "Bashirian", "given": ["Brian"]}],
   "gender": "male",
-  "birthDate": "1990-05-15"
+  "birthDate": "1982-09-30"
 } 
 
 ``` 
@@ -365,10 +365,10 @@ We transform FHIR JSON data into HL7 v2 text format. Here is what it looks like:
 **HL7 v2 format (legacy systems):** 
 
 ``` 
-MSH|^~\&|OpenEMR|Hospital|PrimaryCare|Clinic|20251206103000||ADT^A01|MSG001|P|2.5 
-PID|1||12345||Smith^John||19900515|M 
-PV1|1|O 
-DG1|1||I10^Essential hypertension^ICD10 
+MSH|^~\&|OpenEMR|OpenEMR_FHIR|PrimaryCareEHR|HL7_Module|20251208014235||ADT^A01|MSG00001|P|2.5
+PID|1||9d035a4b-916f-4ea4-b0e7-f81597dd0724||Bashirian^Brian||19820930|M|||912 Ruecker Camp^Fitchburg^Massachusetts^01420^^H
+PV1|1|I
+DG1|1||R56.8^ICD-10 Term^I10|
 ``` 
 
 ### Task 5: Generating HL7 v2 Messages
@@ -559,12 +559,6 @@ Thank you for your attention. We are happy to answer any questions about our pro
 - Sumant Tiwari
 - Monisha Shaik
 
-- Sumant 
-
-- Nisha 
-
- 
-
 **Project Repository:** 
 
 https://github.iu.edu/mahigogu/FA25_B581_Final_Project_OpenEMR_mahitha_gogu 
@@ -583,7 +577,7 @@ https://github.iu.edu/mahigogu/FA25_B581_Final_Project_OpenEMR_mahitha_gogu
 
  
 
-- Python 3.9 or higher 
+- Python 3.13
 
 - requests library for HTTP API calls 
 
