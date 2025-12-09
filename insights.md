@@ -232,25 +232,6 @@ icd_code, icd_display = get_icd_mapping(snomed_code, refset)
 
 ---
 
-## Value to Healthcare Organizations
-
-### 1. Automated Data Migration
-Our ETL pipeline eliminates manual data entry when transferring patient records between systems, reducing errors and saving staff time.
-
-### 2. Semantic Interoperability
-By leveraging SNOMED CT hierarchies and ICD-10 mappings, the pipeline ensures that medical concepts are translated accurately across systems with different coding standards.
-
-### 3. Legacy System Support
-Generating HL7 v2 messages enables data exchange with older hospital systems that cannot be easily replaced, ensuring continuity during system transitions.
-
-### 4. Standardized Clinical Documentation
-Using FHIR resources ensures data is structured according to international healthcare standards, improving data quality and consistency.
-
-### 5. Scalability
-The modular task design allows the pipeline to be extended with additional transformations or resources (e.g., medications, allergies, lab results) without major refactoring.
-
----
-
 ## Conclusion
 
 This project demonstrated the complexities and critical importance of healthcare data integration. Building an ETL pipeline that bridges multiple systems (OpenEMR, Hermes, Primary Care) required:
