@@ -82,7 +82,4 @@ This GitHub Pages site documents the ETL workflow, coding tasks, system diagrams
 
 ---
 
-# Next Steps
-
-Navigate to the **ETL Pipeline** page to explore the technical implementation of each coding task, including extraction logic, SNOMED transformations, and loading workflows.
 
