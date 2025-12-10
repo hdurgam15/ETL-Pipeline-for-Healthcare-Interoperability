@@ -119,7 +119,7 @@ All subsequent tasks relied on data saved from Task 1:
 **Figure 6:** Breakdown of API calls made during the ETL pipeline execution showing interactions with OpenEMR, Hermes, and Primary Care servers.
 
 Our pipeline made approximately:
-- **5 OpenEMR API calls** (patient search, conditions, observations, procedures)
+- **5 OpenEMR API calls** (patient search, 2 conditions, observations, procedures)
 - **3 Hermes API calls** (parent lookup, child lookup, ICD-10 mapping)
 - **5 Primary Care API calls** (create patient, 2 conditions, observation, procedure)
 
