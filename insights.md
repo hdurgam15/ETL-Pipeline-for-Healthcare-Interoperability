@@ -127,18 +127,6 @@ Our pipeline made approximately:
 
 ---
 
-### Summary of Key Technical Challenges
-
-| Challenge | Problem | Solution | Result |
-|----------|---------|----------|--------|
-| **Missing SNOMED Hierarchical Relationships** | Some condition codes had no parent/child terms in Hermes. | Added loop logic to test multiple conditions and stop when a valid parent was found. | Improved success rate from 52% to 85%. |
-| **Complex FHIR Resource Structures** | Blood pressure observations and procedures required deeply nested, error-prone JSON. | Used predefined JSON templates and populated values programmatically. | Reduced coding errors and ensured FHIR compliance. |
-| **HL7 v2 Formatting Complexity** | Manual HL7 v2 formatting was difficult due to pipe-delimited fields and strict ordering. | Used `hl7apy` to build segments and structure messages automatically. | Produced valid HL7 v2 messages without formatting mistakes. |
-| **ICD-10 Mapping Variability** | Different SNOMED refsets produced inconsistent ICD-10 mappings. | Selected the most comprehensive (last) refset for mapping. | Increased ICD-10 mapping success from 65% to 88%. |
-
-
----
-
 ## Best Practices We Followed
 
 - Used FHIR search parameters to filter data directly from the source.
