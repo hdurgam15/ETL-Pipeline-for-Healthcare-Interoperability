@@ -311,12 +311,12 @@ observation = {
         }, 
         { 
             "code": {"coding": [{"code": "8462-4"}]}, 
-            "valueQuantity": {"value": 80, "unit": "mmHg"}  # Diastolic 
+            "valueQuantity": {"value": 60, "unit": "mmHg"}  # Diastolic 
         } 
     ] 
 }
 ```
-This records a blood pressure reading of 120/80 mmHg for the patient. 
+This records a blood pressure reading of 120/60 mmHg for the patient. 
 
 ### Task 4: Creating Procedure
 We create a procedure resource to document medical procedures: 
