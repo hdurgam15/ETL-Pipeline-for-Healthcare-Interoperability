@@ -19,7 +19,7 @@ This page presents key insights derived from building our ETL pipeline that tran
 **Patient DOB:** September 30, 1982  
 **Condition:** R56.8 - Other and unspecified convulsions  
 **Procedure:** Appendectomy (SNOMED: 80146002)  
-**Blood Pressure:** 120/60 mmHg (Normal)  
+**Blood Pressure:** 120/60 mmHg (low)  
 **Total Resources Created:** 6 FHIR resources + 1 HL7 v2 message
 
 ---
