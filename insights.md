@@ -67,17 +67,9 @@ Our pipeline leveraged SNOMED CT's hierarchical structure to transform medical c
 
 ## Data Quality Challenges
 
-![Data Quality Issues](assets/data_quality_chart.png)
+Real-world healthcare data is incomplete.
 
-**Figure 3:** Data completeness in OpenEMR patient records. Missing data was common across demographics, contact information, and addresses, requiring robust error handling.
-
-Real-world healthcare data is incomplete. We encountered:
-
-- **35% missing contact information** (phone numbers, email addresses)
-- **28% incomplete addresses** (missing city, state, or postal code)
-- **22% incomplete patient identifiers**
-
-**Our Solution:** Implemented defensive coding with default values:
+**Solution:** Implemented defensive coding with default values:
 
 ```python
 "line": addr.get("line", "Not Available"),
