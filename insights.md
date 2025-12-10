@@ -26,7 +26,7 @@ This page presents key insights derived from building our ETL pipeline that tran
 
 ## ETL Pipeline Workflow
 
-![ETL Workflow](assets/new1.png)
+![ETL Workflow](assets/final image.png)
 
 **Figure 1:** Complete ETL pipeline showing data extraction from OpenEMR, transformation using Hermes terminology server, and loading to Primary Care FHIR server. The five tasks are executed sequentially with Task 1 serving as the foundation for all subsequent tasks.
 
