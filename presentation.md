@@ -50,9 +50,9 @@ Our project demonstrates the movement of patient data from OpenEMR to a Primary 
 ---
 
 ### **Monisha Shaik**
-- I am from Hyderabad, India, and I have a Bachelor's degree in Dental Surgery.  
-- I previously worked as a junior doctor for nearly a year, giving me hands-on clinical exposure.  
-- I contributed to presentation design, terminology integration, and review of ETL and HL7 messaging workflows.
+- I am a transfer student from Manipal University, India joined IU in Aug 2025.  
+- I worked as a duty doctor in Gynecology department.   
+- I contributed to presentation design, and review of ETL and HL7 messaging workflows.
 
 ---
 
