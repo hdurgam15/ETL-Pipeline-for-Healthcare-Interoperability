@@ -26,7 +26,7 @@ This page presents key insights derived from building our ETL pipeline that tran
 
 ## ETL Pipeline Workflow
 
-![ETL Workflow](assets/new1.png)
+![ETL Workflow](assets/finalimage.png)
 
 **Figure 1:** Complete ETL pipeline showing data extraction from OpenEMR, transformation using Hermes terminology server, and loading to Primary Care FHIR server. The five tasks are executed sequentially with Task 1 serving as the foundation for all subsequent tasks.
 
@@ -67,17 +67,9 @@ Our pipeline leveraged SNOMED CT's hierarchical structure to transform medical c
 
 ## Data Quality Challenges
 
-![Data Quality Issues](assets/data_quality_chart.png)
+Real-world healthcare data is incomplete.
 
-**Figure 3:** Data completeness in OpenEMR patient records. Missing data was common across demographics, contact information, and addresses, requiring robust error handling.
-
-Real-world healthcare data is incomplete. We encountered:
-
-- **35% missing contact information** (phone numbers, email addresses)
-- **28% incomplete addresses** (missing city, state, or postal code)
-- **22% incomplete patient identifiers**
-
-**Our Solution:** Implemented defensive coding with default values:
+**Solution:** Implemented defensive coding with default values:
 
 ```python
 "line": addr.get("line", "Not Available"),
@@ -127,23 +119,11 @@ All subsequent tasks relied on data saved from Task 1:
 **Figure 6:** Breakdown of API calls made during the ETL pipeline execution showing interactions with OpenEMR, Hermes, and Primary Care servers.
 
 Our pipeline made approximately:
-- **5 OpenEMR API calls** (patient search, conditions, observations, procedures)
+- **5 OpenEMR API calls** (patient search, 2 conditions, observations, procedures)
 - **3 Hermes API calls** (parent lookup, child lookup, ICD-10 mapping)
 - **5 Primary Care API calls** (create patient, 2 conditions, observation, procedure)
 
 **Performance Note:** Hermes terminology lookups were the slowest operations due to complex SNOMED CT queries and network latency.
-
----
-
-### Summary of Key Technical Challenges
-
-| Challenge | Problem | Solution | Result |
-|----------|---------|----------|--------|
-| **Missing SNOMED Hierarchical Relationships** | Some condition codes had no parent/child terms in Hermes. | Added loop logic to test multiple conditions and stop when a valid parent was found. | Improved success rate from 52% to 85%. |
-| **Complex FHIR Resource Structures** | Blood pressure observations and procedures required deeply nested, error-prone JSON. | Used predefined JSON templates and populated values programmatically. | Reduced coding errors and ensured FHIR compliance. |
-| **HL7 v2 Formatting Complexity** | Manual HL7 v2 formatting was difficult due to pipe-delimited fields and strict ordering. | Used `hl7apy` to build segments and structure messages automatically. | Produced valid HL7 v2 messages without formatting mistakes. |
-| **ICD-10 Mapping Variability** | Different SNOMED refsets produced inconsistent ICD-10 mappings. | Selected the most comprehensive (last) refset for mapping. | Increased ICD-10 mapping success from 65% to 88%. |
-
 
 ---
 
