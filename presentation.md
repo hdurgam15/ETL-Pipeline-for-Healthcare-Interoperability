@@ -417,6 +417,8 @@ The HL7 v2 messages we generate can be sent to:
 - Radiology for imaging orders
 - Any legacy system that needs patient information 
 
+[Insights](insights.md)
+
 ### Summary 
 
 We built a complete ETL pipeline that extracts patient data from OpenEMR, transforms it using medical terminology standards, and loads it into Primary Care EHR. The pipeline also generates HL7 v2 messages for legacy system compatibility. 
