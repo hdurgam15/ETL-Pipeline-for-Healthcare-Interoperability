@@ -1,6 +1,6 @@
 > **Note:** This was a team project completed for the B581 Health Info Standards course at IU. This fork is maintained to showcase my individual contribution. My role: **Observation and Data Transformation Specialist** — executed SNOMED CT and ICD-10 code mapping, supported FHIR data transformations, and contributed to terminology server integration.
 >
-> # ETL Pipeline for Healthcare Interoperability  
+# ETL Pipeline for Healthcare Interoperability  
 ### FHIR • SNOMED CT • ICD-10 • HL7 v2 • Python
 
 This project implements a complete ETL (Extract, Transform, Load) pipeline that integrates healthcare data across multiple systems using FHIR APIs, SNOMED CT terminology services, and HL7 v2 message generation.  
